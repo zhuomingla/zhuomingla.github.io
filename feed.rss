@@ -4,7 +4,7 @@
         <title>无妄p的小站</title>
         <link>https://blog.vuejs.org</link>
         <description>A VitePress site</description>
-        <lastBuildDate>Sun, 19 Feb 2023 08:12:16 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 19 Feb 2023 09:07:20 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-CN</language>
@@ -19,7 +19,7 @@
             <link>https://blog.vuejs.orgposts/第一个博客.html</link>
             <guid>https://blog.vuejs.orgposts/第一个博客.html</guid>
             <pubDate>Sun, 19 Feb 2023 00:00:00 GMT</pubDate>
-            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><!----><div class="article"><div style="position:relative;" class="content"><div><h1 id="第一个博客" tabindex="-1">第一个博客 <a class="header-anchor" href="#第一个博客" aria-hidden="true">#</a></h1><p>这里是无妄 p，一个不是 p 主但想成为 p 主的人~ 最近心血来潮建立一个博客，出了很多错误就是了。 以后可能会更新一些无聊的日常。虽然我一周只能上一次网。 目前的计划：</p><ul><li>用 nuxt 建立一个基于 activitypub 协议的，以网络社区为中心的网站</li><li>想做一体机，但没能力</li></ul><p>目前进度：</p><ul><li>nuxt：刚刚开始。。。</li><li>vocaloid：刚刚开始。。。</li></ul><p>总之，就是这么回事。 [<img src="/assets/fcf6ae3c13fc0da1d4f215c969a0ffd22a5bb5f1.jpg@942w_668h_progressive.49e44cd0.webp" alt="水点波奇酱~">]</p></div></div><div class="content nav"><span><a href=""><i class="fa fa-angle-left"></i> </a></span><span><a href=""> <i class="fa fa-angle-right"></i></a></span></div><!----><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><!----><div class="article"><div style="position:relative;" class="content"><div><h1 id="第一个博客" tabindex="-1">第一个博客 <a class="header-anchor" href="#第一个博客" aria-hidden="true">#</a></h1><p>这里是无妄 p，一个不是 p 主但想成为 p 主的人~ 最近心血来潮建立一个博客，出了很多错误就是了。 以后可能会更新一些无聊的日常。虽然我一周只能上一次网。 目前的计划：</p><ul><li>用 nuxt 建立一个基于 activitypub 协议的，以网络社区为中心的网站</li><li>想做一体机，但没能力</li></ul><p>目前进度：</p><ul><li>nuxt：刚刚开始。。。</li><li>vocaloid：刚刚开始。。。</li></ul><p>总之，就是这么回事。 <img src="/assets/fcf6ae3c13fc0da1d4f215c969a0ffd22a5bb5f1.jpg@942w_668h_progressive.49e44cd0.webp" alt="水点波奇酱~"></p></div></div><div class="content nav"><span><a href=""><i class="fa fa-angle-left"></i> </a></span><span><a href=""> <i class="fa fa-angle-right"></i></a></span></div><!----><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
         </item>
     </channel>
 </rss>
