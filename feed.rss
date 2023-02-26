@@ -4,7 +4,7 @@
         <title>无妄p的小站</title>
         <link>https://blog.vuejs.org</link>
         <description>A VitePress site</description>
-        <lastBuildDate>Sun, 19 Feb 2023 09:14:19 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 26 Feb 2023 09:00:08 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-CN</language>
@@ -14,6 +14,13 @@
             <link>https://blog.vuejs.org</link>
         </image>
         <copyright>flaribbit</copyright>
+        <item>
+            <title><![CDATA[哔哔哔哔。。。。。]]></title>
+            <link>https://blog.vuejs.orgposts/哔哔哔哔。。。。。.html</link>
+            <guid>https://blog.vuejs.orgposts/哔哔哔哔。。。。。.html</guid>
+            <pubDate>Sun, 26 Feb 2023 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><!----><div class="article"><div style="position:relative;" class="content"><div><h1 id="哔哔哔哔。。。。。" tabindex="-1">哔哔哔哔。。。。。 <a class="header-anchor" href="#哔哔哔哔。。。。。" aria-hidden="true">#</a></h1><p>最近在听《初音未来的消失》的时候突然想到，假如角色互换一下，写的是 p 主消失时的心情呢?<br> 歌曲的名字就决定是《有机历史的消亡》了，讲的是作为“社会性怪兽”的 miku 在经历众多 p 主逝去之后的感叹。<br> 不过，我也没那个力量就是了<br> 计划进度：</p><ul><li>nuxt： 成功写出第一个 api 了，下一周来写注册页面。。。</li><li>vocaloid： 本来写了一个曲子，但没带。。。转换了目标。</li></ul><p>好无聊~但也有点意思<br> 3 月 9 号月考，我要加油~</p><iframe src="//player.bilibili.com/player.html?aid=48977154&amp;bvid=BV1sb411M7be&amp;cid=85773681&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="600px"> </iframe></div></div><div class="content nav"><span><a href=""><i class="fa fa-angle-left"></i> </a></span><span><a href=""> <i class="fa fa-angle-right"></i></a></span></div><!----><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[第一个博客]]></title>
             <link>https://blog.vuejs.orgposts/第一个博客.html</link>
