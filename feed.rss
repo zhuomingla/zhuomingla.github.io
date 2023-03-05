@@ -4,7 +4,7 @@
         <title>无妄p的小站</title>
         <link>https://blog.vuejs.org</link>
         <description>A VitePress site</description>
-        <lastBuildDate>Sun, 26 Feb 2023 09:00:08 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 05 Mar 2023 09:07:09 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-CN</language>
@@ -14,6 +14,13 @@
             <link>https://blog.vuejs.org</link>
         </image>
         <copyright>flaribbit</copyright>
+        <item>
+            <title><![CDATA[无能狂妄]]></title>
+            <link>https://blog.vuejs.orgposts/无能狂妄.html</link>
+            <guid>https://blog.vuejs.orgposts/无能狂妄.html</guid>
+            <pubDate>Sun, 05 Mar 2023 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><!----><div class="article"><div style="position:relative;" class="content"><div><h1 id="无能狂妄" tabindex="-1">无能狂妄 <a class="header-anchor" href="#无能狂妄" aria-hidden="true">#</a></h1><p>这周什么也没做成，我真是个废物<br> 好困难啊。。。。<br> 计划进度：</p><ul><li>nuxt：没有</li><li>vocaloid：没有</li></ul><p>下周就要考试了。。。加油吧<br> 好听。。。</p><iframe src="//player.bilibili.com/player.html?aid=310355906&amp;bvid=BV1dA411y7wB&amp;cid=1034774156&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="600px"> </iframe></div></div><div class="content nav"><span><a href=""><i class="fa fa-angle-left"></i> </a></span><span><a href=""> <i class="fa fa-angle-right"></i></a></span></div><!----><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[哔哔哔哔。。。。。]]></title>
             <link>https://blog.vuejs.orgposts/哔哔哔哔。。。。。.html</link>
