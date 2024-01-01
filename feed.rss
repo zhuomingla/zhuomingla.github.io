@@ -4,7 +4,7 @@
         <title>无妄p的小站</title>
         <link>https://blog.vuejs.org</link>
         <description>A VitePress site</description>
-        <lastBuildDate>Mon, 01 Jan 2024 12:23:50 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 01 Jan 2024 12:36:24 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-CN</language>
@@ -13,7 +13,7 @@
             <url>https://vuejs.org/images/logo.png</url>
             <link>https://blog.vuejs.org</link>
         </image>
-        <copyright>flaribbit</copyright>
+        <copyright>无妄p</copyright>
         <item>
             <title><![CDATA[新年啦！！！]]></title>
             <link>https://blog.vuejs.orgposts/新年.html</link>
@@ -26,7 +26,7 @@
             <link>https://blog.vuejs.orgposts/RIP.html</link>
             <guid>https://blog.vuejs.orgposts/RIP.html</guid>
             <pubDate>Sun, 26 Mar 2023 00:00:00 GMT</pubDate>
-            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><div class="abanner" style="background-image: url(../public/img/fcf6ae3c13fc0da1d4f215c969a0ffd22a5bb5f1.jpg%40942w_668h_progressive.webp)"><div class="titlebox"><h1 class="title">R I P</h1><div class="info">flaribbit · 更新于 2023-03-26 · 0 次阅读</div></div></div><div class="article"><div style="position:relative;" class="content"><div><h1 id="r-i-p" tabindex="-1">R I P <a class="header-anchor" href="#r-i-p" aria-hidden="true">#</a></h1><p>“你也能看到，那颗奥特之星！”</p><iframe src="//player.bilibili.com/player.html?aid=824015127&amp;bvid=BV1rg4y1W7BQ&amp;cid=1068954148&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="600px"> </iframe></div></div><div class="content nav"><span><a href="/posts/新年.html"><i class="fa fa-angle-left"></i> 新年啦！！！</a></span><span><a href="/posts/浊音无妄.html">浊音无妄 <i class="fa fa-angle-right"></i></a></span></div><div id="waline"></div><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><div class="abanner" style="background-image: url(../public/img/fcf6ae3c13fc0da1d4f215c969a0ffd22a5bb5f1.jpg%40942w_668h_progressive.webp)"><div class="titlebox"><h1 class="title">R I P</h1><div class="info">无妄p · 更新于 2023-03-26 · 0 次阅读</div></div></div><div class="article"><div style="position:relative;" class="content"><div><h1 id="r-i-p" tabindex="-1">R I P <a class="header-anchor" href="#r-i-p" aria-hidden="true">#</a></h1><p>“你也能看到，那颗奥特之星！”</p><iframe src="//player.bilibili.com/player.html?aid=824015127&amp;bvid=BV1rg4y1W7BQ&amp;cid=1068954148&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="600px"> </iframe></div></div><div class="content nav"><span><a href="/posts/新年.html"><i class="fa fa-angle-left"></i> 新年啦！！！</a></span><span><a href="/posts/浊音无妄.html">浊音无妄 <i class="fa fa-angle-right"></i></a></span></div><div id="waline"></div><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[浊音无妄]]></title>
