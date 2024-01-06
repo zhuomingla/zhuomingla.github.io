@@ -4,7 +4,7 @@
         <title>无妄p的小站</title>
         <link>https://blog.vuejs.org</link>
         <description>A VitePress site</description>
-        <lastBuildDate>Mon, 01 Jan 2024 13:49:38 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 06 Jan 2024 14:12:58 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>zh-CN</language>
@@ -15,11 +15,18 @@
         </image>
         <copyright>无妄p</copyright>
         <item>
+            <title><![CDATA[啊啊啊啊....]]></title>
+            <link>https://blog.vuejs.orgposts/lalala.html</link>
+            <guid>https://blog.vuejs.orgposts/lalala.html</guid>
+            <pubDate>Sat, 06 Jan 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><div class="abanner" style="background-image: url(../public/img/miku20240101.png)"><div class="titlebox"><h1 class="title">啊啊啊啊....</h1><div class="info">无妄p · 更新于 2024-01-06 · 0 次阅读</div></div></div><div class="article"><div style="position:relative;" class="content"><div><h1 id="无聊的一周" tabindex="-1">无聊的一周 <a class="header-anchor" href="#无聊的一周" aria-hidden="true">#</a></h1><p>不断地失败前进... <br> 学习画画,不太行。 <br><img src="/assets/fake.234884bb.png" alt="未上高光"></p></div></div><div class="content nav"><span><!----></span><span><a href="/posts/newyear.html">新年啦！！！ <i class="fa fa-angle-right"></i></a></span></div><div id="waline"></div><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+        </item>
+        <item>
             <title><![CDATA[新年啦！！！]]></title>
             <link>https://blog.vuejs.orgposts/newyear.html</link>
             <guid>https://blog.vuejs.orgposts/newyear.html</guid>
             <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
-            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><div class="abanner" style="background-image: url(../public/img/miku20240101.png)"><div class="titlebox"><h1 class="title">新年啦！！！</h1><div class="info">无妄p · 更新于 2024-01-01 · 0 次阅读</div></div></div><div class="article"><div style="position:relative;" class="content"><div><h1 id="新年啦！！！" tabindex="-1">新年啦！！！ <a class="header-anchor" href="#新年啦！！！" aria-hidden="true">#</a></h1><p>虽然去年又没干什么... 不过，新年，新的开始！ 今年，希望完成一些我喜欢的事：</p><ul><li>成为 p 主</li><li>完成一个 activitypub 社区服务器</li><li>...</li></ul><p>总之，向前走吧 最后附上一个自己画的 miku（很烂 <img src="/assets/20240101.4497567c.png" alt="未上高光"><img src="/assets/miku20240101.3c0bb4f7.png" alt="高光"></p><p>希望没有污染各位的眼睛...</p></div></div><div class="content nav"><span><!----></span><span><a href="/posts/RIP.html">R I P <i class="fa fa-angle-right"></i></a></span></div><div id="waline"></div><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
+            <content:encoded><![CDATA[<a href="#" class="totop" style="top:-900px;" aria-label="to-top"></a><!--[--><div class="abanner" style="background-image: url(../img/miku20240101.png)"><div class="titlebox"><h1 class="title">新年啦！！！</h1><div class="info">无妄p · 更新于 2024-01-01 · 0 次阅读</div></div></div><div class="article"><div style="position:relative;" class="content"><div><h1 id="新年啦！！！" tabindex="-1">新年啦！！！ <a class="header-anchor" href="#新年啦！！！" aria-hidden="true">#</a></h1><p>虽然去年又没干什么...<br> 不过，新年，新的开始！<br> 今年，希望完成一些我喜欢的事：</p><ul><li>成为 p 主</li><li>完成一个 activitypub 社区服务器</li><li>...</li></ul><p>总之，向前走吧<br> 最后附上一个自己画的 miku（很烂<br><img src="/assets/20240101.4497567c.png" alt="未上高光"><img src="/assets/miku20240101.3c0bb4f7.png" alt="高光"></p><p>希望没有污染各位的眼睛...</p></div></div><div class="content nav"><span><a href="/posts/lalala.html"><i class="fa fa-angle-left"></i> 啊啊啊啊....</a></span><span><a href="/posts/RIP.html">R I P <i class="fa fa-angle-right"></i></a></span></div><div id="waline"></div><div class="toc"><ol><!--[--><!--]--></ol></div></div><!--]-->]]></content:encoded>
         </item>
         <item>
             <title><![CDATA[R I P]]></title>
