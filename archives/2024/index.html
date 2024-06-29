@@ -86,6 +86,39 @@
 
     
         <h2 class="title">
+            <a href="/2024/06/28/js%E5%B0%8F%E5%9E%8Bllm%E8%AE%A1%E5%88%92/">
+                js小型llm计划
+            </a>
+        </h2>
+    
+    <time>
+        6月 28, 2024
+    </time>
+    <section class="content">
+        <p>准备照着重打一遍代码，不过是用tensorflow.js  </p>
+<p>持续更新。</p>
+<h1><span id="粗略理解">粗略理解</span></h1><p>首先先粗略的理解一下文本生成的原理吧，虽然非常幼稚…<br><img src="/img/trans.png"></p>
+<p>注意力：对应两个token之间的关系<br>文本生成：根据上个token预测下一个token<br>k,q,v：k与q相对应，v作为输入，输出v2，v2又作为下一个输入…<br>所以理论上，一层注意力也是能用来生成的，只要参数够大…<br>希望没有错的太离谱。</p>
+<h1><span id="一个js-transformer实现">一个js transformer实现</span></h1><p>在github上发现了一个有趣的项目<br><a target="_blank" rel="noopener" href="https://github.com/BenjaminWegener/transformer-tfjs">transformer-tfjs</a><br>直接在浏览器里训练模型，太牛逼了，准备照着做…<br><img src="/img/tfjs.png"></p>
+<h1><span id="归一化">归一化</span></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">tf.util.shuffle(data)</span><br><span class="line"></span><br><span class="line">      const epsilon = tf.scalar(1e-4) // 创建一个很小的标量epsilon</span><br><span class="line">      const inputs = data.map((d) =&gt; d.horsepower)</span><br><span class="line">      const labels = data.map((d) =&gt; d.mpg)</span><br><span class="line"></span><br><span class="line">      const inputTensor = tf.tensor2d(inputs, [inputs.length, 1])</span><br><span class="line">      const labelTensor = tf.tensor2d(labels, [labels.length, 1])</span><br><span class="line"></span><br><span class="line">      const sqrt_pow_mean = inputTensor</span><br><span class="line">        .square()</span><br><span class="line">        .mean(1)</span><br><span class="line">        .sqrt()</span><br><span class="line">        .expandDims(1)</span><br><span class="line">        .add(epsilon)</span><br><span class="line">      const label_pow_mean = inputTensor</span><br><span class="line">        .square()</span><br><span class="line">        .mean(1)</span><br><span class="line">        .sqrt()</span><br><span class="line">        .expandDims(1)</span><br><span class="line">        .add(epsilon)</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+<p> 最简单的，RMS_Norm归一化。  </p>
+<p> 但我不是很懂mean()这个函数，沿着第1维和第2维好像都能出现结果。。。<br> （划掉）</p>
+<p> 而且出现了未完全归一化的结果…<br> <img src="/img/RMS.png"><br>  呃…大体上是完成了吧。(还是用简单点的ba…)</p>
+<h1><span id="data">data</span></h1> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"> //import * as assert from &#x27;assert&#x27;</span><br><span class="line">import &#123; getEncoding, encodingForModel &#125; from &#x27;js-tiktoken&#x27;</span><br><span class="line">import * as fs from &#x27;fs&#x27;</span><br><span class="line">import * as nj from &#x27;numjs&#x27;</span><br><span class="line">//import * as os from &#x27;os&#x27;</span><br><span class="line">import * as path from &#x27;path&#x27;</span><br><span class="line">//import * as tf from &#x27;@tensorflow/tfjs&#x27;</span><br><span class="line">//import &#123; fileURLToPath &#125; from &#x27;url&#x27;</span><br><span class="line"></span><br><span class="line">//const __filename = fileURLToPath(import.meta.url)</span><br><span class="line">//const __dirname = path.dirname(__filename)</span><br><span class="line">const enc = getEncoding(&#x27;gpt2&#x27;)</span><br><span class="line">//assert.strictEqual(enc.decode(enc.encode(&#x27;hello world&#x27;)), &#x27;hello world&#x27;)</span><br><span class="line"></span><br><span class="line">fs.readFile(&#x27;./night.txt&#x27;, &#x27;utf8&#x27;, (err: Error | null, content: string) =&gt; &#123;</span><br><span class="line">  if (err) &#123;</span><br><span class="line">    console.error(&#x27;Error reading file:&#x27;, err)</span><br><span class="line">    return</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(content.length)</span><br><span class="line">  const n = content.length</span><br><span class="line">  const train_data = content.slice(0, Math.floor(n * 0.8)) //切片，前80%</span><br><span class="line">  const val_data = content.slice(Math.floor(n * 0.8)) //后20%</span><br><span class="line">  let train_ids = enc.encode(train_data) //编码</span><br><span class="line">  let val_ids = enc.encode(val_data)</span><br><span class="line">  console.log(&#x27;train tokens:&#x27;, train_ids.length)</span><br><span class="line">  console.log(&#x27;val tokens:&#x27;, val_ids.length)</span><br><span class="line"></span><br><span class="line">  var train_ids_list = nj.array(train_ids, &#x27;uint16&#x27;)</span><br><span class="line">  var val_ids_list = nj.array(val_ids, &#x27;uint16&#x27;)</span><br><span class="line"></span><br><span class="line">  const trainArray = train_ids_list.tolist() // 转换为普通数组</span><br><span class="line">  const trainBuffer = Buffer.from(trainArray) // 转换为 Buffer 对象</span><br><span class="line">  const valArray = train_ids_list.tolist()</span><br><span class="line">  const valBuffer = Buffer.from(valArray)</span><br><span class="line"></span><br><span class="line">  fs.writeFileSync(path.join(&#x27;./data&#x27;, &#x27;train.bin&#x27;), trainBuffer)</span><br><span class="line"></span><br><span class="line">  fs.writeFileSync(path.join(&#x27;./data&#x27;, &#x27;val.bin&#x27;), valBuffer)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>用numjs和js-tiktoken实现编码，模仿prepare.py保存为二进制。</p>
+
+
+        
+
+        
+
+    </section>
+</article>
+  
+    <article class="post ">
+
+    
+        <h2 class="title">
             <a href="/2024/06/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84llm%E8%AF%95%E7%94%A8/">
                 一个简易的llm试用
             </a>

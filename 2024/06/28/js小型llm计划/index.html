@@ -4,23 +4,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>Archives: 2024/6 | 无妄p的小站</title>
+    <title>js小型llm计划 | 无妄p的小站</title>
     <meta name="keywords" content="hexo,theme,otakism,otaku"/>
     <meta name="HandheldFriendly" content="True"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="google-site-verification" content=""/>
     <meta name="baidu-site-verification" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="网络是极端的现实">
-<meta property="og:type" content="website">
-<meta property="og:title" content="无妄p的小站">
-<meta property="og:url" content="https://zhuomingla.github.io/archives/2024/06/index.html">
+    <meta name="description" content="准备照着重打一遍代码，不过是用tensorflow.js   持续更新。 粗略理解首先先粗略的理解一下文本生成的原理吧，虽然非常幼稚… 注意力：对应两个token之间的关系文本生成：根据上个token预测下一个tokenk,q,v：k与q相对应，v作为输入，输出v2，v2又作为下一个输入…所以理论上，一层注意力也是能用来生成的，只要参数够大…希望没有错的太离谱。 一个js transformer实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js小型llm计划">
+<meta property="og:url" content="https://zhuomingla.github.io/2024/06/28/js%E5%B0%8F%E5%9E%8Bllm%E8%AE%A1%E5%88%92/index.html">
 <meta property="og:site_name" content="无妄p的小站">
-<meta property="og:description" content="网络是极端的现实">
+<meta property="og:description" content="准备照着重打一遍代码，不过是用tensorflow.js   持续更新。 粗略理解首先先粗略的理解一下文本生成的原理吧，虽然非常幼稚… 注意力：对应两个token之间的关系文本生成：根据上个token预测下一个tokenk,q,v：k与q相对应，v作为输入，输出v2，v2又作为下一个输入…所以理论上，一层注意力也是能用来生成的，只要参数够大…希望没有错的太离谱。 一个js transformer实">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhuomingla.github.io/img/trans.png">
+<meta property="og:image" content="https://zhuomingla.github.io/img/tfjs.png">
+<meta property="og:image" content="https://zhuomingla.github.io/img/RMS.png">
+<meta property="article:published_time" content="2024-06-28T12:54:02.000Z">
+<meta property="article:modified_time" content="2024-06-29T14:38:30.402Z">
 <meta property="article:author" content="无妄p">
 <meta property="article:tag" content="无妄p">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhuomingla.github.io/img/trans.png">
     
 
     <!-- Favicon -->
@@ -69,33 +75,20 @@
     <script>setLoadingBarProgress(40);</script>
 
     <main id="main" role="main">
-        
-    
-
-
-  <section class="page-header archive">
-    <h1>- <span>2024.6</span> -</h1>
-  </section>
-
-
-
-
-<section class="post-list">
-  
-    <article class="post ">
-
-    
-        <h2 class="title">
-            <a href="/2024/06/28/js%E5%B0%8F%E5%9E%8Bllm%E8%AE%A1%E5%88%92/">
-                js小型llm计划
-            </a>
-        </h2>
-    
+        <article id="post-js小型llm计划"
+         class="post article white-box article-type-post"
+         itemscope itemprop="blogPost">
+    <h2 class="title">
+        <a href="/2024/06/28/js%E5%B0%8F%E5%9E%8Bllm%E8%AE%A1%E5%88%92/">
+            js小型llm计划
+        </a>
+    </h2>
     <time>
         6月 28, 2024
     </time>
     <section class="content">
-        <p>准备照着重打一遍代码，不过是用tensorflow.js  </p>
+        <div class="article-entry" itemprop="articleBody">
+            <p>准备照着重打一遍代码，不过是用tensorflow.js  </p>
 <p>持续更新。</p>
 <h1><span id="粗略理解">粗略理解</span></h1><p>首先先粗略的理解一下文本生成的原理吧，虽然非常幼稚…<br><img src="/img/trans.png"></p>
 <p>注意力：对应两个token之间的关系<br>文本生成：根据上个token预测下一个token<br>k,q,v：k与q相对应，v作为输入，输出v2，v2又作为下一个输入…<br>所以理论上，一层注意力也是能用来生成的，只要参数够大…<br>希望没有错的太离谱。</p>
@@ -107,114 +100,35 @@
 <h1><span id="data">data</span></h1> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"> //import * as assert from &#x27;assert&#x27;</span><br><span class="line">import &#123; getEncoding, encodingForModel &#125; from &#x27;js-tiktoken&#x27;</span><br><span class="line">import * as fs from &#x27;fs&#x27;</span><br><span class="line">import * as nj from &#x27;numjs&#x27;</span><br><span class="line">//import * as os from &#x27;os&#x27;</span><br><span class="line">import * as path from &#x27;path&#x27;</span><br><span class="line">//import * as tf from &#x27;@tensorflow/tfjs&#x27;</span><br><span class="line">//import &#123; fileURLToPath &#125; from &#x27;url&#x27;</span><br><span class="line"></span><br><span class="line">//const __filename = fileURLToPath(import.meta.url)</span><br><span class="line">//const __dirname = path.dirname(__filename)</span><br><span class="line">const enc = getEncoding(&#x27;gpt2&#x27;)</span><br><span class="line">//assert.strictEqual(enc.decode(enc.encode(&#x27;hello world&#x27;)), &#x27;hello world&#x27;)</span><br><span class="line"></span><br><span class="line">fs.readFile(&#x27;./night.txt&#x27;, &#x27;utf8&#x27;, (err: Error | null, content: string) =&gt; &#123;</span><br><span class="line">  if (err) &#123;</span><br><span class="line">    console.error(&#x27;Error reading file:&#x27;, err)</span><br><span class="line">    return</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(content.length)</span><br><span class="line">  const n = content.length</span><br><span class="line">  const train_data = content.slice(0, Math.floor(n * 0.8)) //切片，前80%</span><br><span class="line">  const val_data = content.slice(Math.floor(n * 0.8)) //后20%</span><br><span class="line">  let train_ids = enc.encode(train_data) //编码</span><br><span class="line">  let val_ids = enc.encode(val_data)</span><br><span class="line">  console.log(&#x27;train tokens:&#x27;, train_ids.length)</span><br><span class="line">  console.log(&#x27;val tokens:&#x27;, val_ids.length)</span><br><span class="line"></span><br><span class="line">  var train_ids_list = nj.array(train_ids, &#x27;uint16&#x27;)</span><br><span class="line">  var val_ids_list = nj.array(val_ids, &#x27;uint16&#x27;)</span><br><span class="line"></span><br><span class="line">  const trainArray = train_ids_list.tolist() // 转换为普通数组</span><br><span class="line">  const trainBuffer = Buffer.from(trainArray) // 转换为 Buffer 对象</span><br><span class="line">  const valArray = train_ids_list.tolist()</span><br><span class="line">  const valBuffer = Buffer.from(valArray)</span><br><span class="line"></span><br><span class="line">  fs.writeFileSync(path.join(&#x27;./data&#x27;, &#x27;train.bin&#x27;), trainBuffer)</span><br><span class="line"></span><br><span class="line">  fs.writeFileSync(path.join(&#x27;./data&#x27;, &#x27;val.bin&#x27;), valBuffer)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>用numjs和js-tiktoken实现编码，模仿prepare.py保存为二进制。</p>
 
-
-        
-
-        
-
+        </div>
+        <div class="article-tags tags">
+            
+        </div>
     </section>
 </article>
-  
-    <article class="post ">
-
-    
-        <h2 class="title">
-            <a href="/2024/06/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84llm%E8%AF%95%E7%94%A8/">
-                一个简易的llm试用
-            </a>
-        </h2>
-    
-    <time>
-        6月 28, 2024
-    </time>
-    <section class="content">
-        <p>之前在bilibili看到一个简易的llm:  </p>
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=1402478024&bvid=BV1hr42147xc&cid=1482912880&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>  
-
-<p>虽然没完全看懂，不过还是先试着运行一下。  </p>
-<p>不过问题来了，我没有显卡，用cpu训练又太慢。<br>于是就打算在coloab平台上训练。  </p>
-<p>将文件夹上传到谷歌硬盘，再在coloab中装载。<br>不知为何相对路径没有用，就用绝对路径了。(估计是我填错了)  </p>
-<p>先准备数据集，用了自带的.</p>
-<p>运行train.py<br><img src="/img/coloab.png">  </p>
-<p>这里已经训练过两轮了<br>大小居然要1.7G…  </p>
-<p>运行sample.py<br><img src="/img/sample.png"></p>
-<p>效果还不错。</p>
-<p>之后:学习一下架构，继续削减参数，魔改网络。</p>
 
 
-        
-
-        
-
-    </section>
-</article>
-  
-    <article class="post ">
-
-    
-        <h2 class="title">
-            <a href="/2024/06/27/%E6%88%91%EF%BC%8C%E5%86%8D%E7%94%9F%E4%BA%A7/">
-                我，再生产
-            </a>
-        </h2>
-    
-    <time>
-        6月 27, 2024
-    </time>
-    <section class="content">
-        <h1><span id="无聊的失败再演">无聊的失败再演</span></h1><p>又是无意义的展开，我的未来…<br>会如何呢，真是期待啊<br>小时候看到的，绚丽多彩的世界</p>
 
 
-        
 
-        
-            <div class="tags">
-                <a class="tag-none-link" href="/tags/%E6%97%A5%E5%B8%B8/" rel="tag">日常</a>
-            </div>
-        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/md5-js@0.0.3/md5.min.js"></script>
+  <div id="gitalk-container"></div>
 
-    </section>
-</article>
-  
-    <article class="post ">
+<script>
+  const gitalk = new Gitalk({
+  clientID: 'Ov23ctn4OmxLocYSTVVt',
+  clientSecret: '102617d51857a0af76e3f0de8a3fc601e7a64c00',
+  repo: 'zhuomingla.github.io',      // The repository of store comments,
+  owner: 'zhuomingla',
+  admin: ['zhuomingla'],
+  id: md5(location.pathname),    // Ensure uniqueness and length less than 50
+  distractionFreeMode: false  // Facebook-like distraction free mode
+})
 
-    
-        <h2 class="title">
-            <a href="/2024/06/27/hello-world/">
-                Hello World
-            </a>
-        </h2>
-    
-    <time>
-        6月 27, 2024
-    </time>
-    <section class="content">
-        <h1><span id="hello-world-也是很重要的">hello world 也是很重要的</span></h1><p>保留下来作为纪念吧</p>
-<p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2><span id="quick-start">Quick Start</span></h2><h3><span id="create-a-new-post">Create a new post</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-
-        
-
-        
-
-    </section>
-</article>
-  
-</section>
-
-
+gitalk.render('gitalk-container')
+</script>
 
         <script>setLoadingBarProgress(60);</script>
     </main>
