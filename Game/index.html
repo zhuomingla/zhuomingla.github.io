@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>绿色出行 - 修复版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .grid-cell {
+                width: 50px;
+                height: 50px;
+                display: inline-block;
+                border: 1px solid #ccc;
+                background-color: #f5f5f5;
+                position: relative;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .grid-cell:hover:not(.obstacle) {
+                background-color: #e0e0e0;
+            }
+            .grid-cell.start1 {
+                background-color: #bbdefb;
+            }
+            .grid-cell.start2 {
+                background-color: #ffcdd2;
+            }
+            .grid-cell.scenic {
+                background-color: #81c784;
+            }
+            .grid-cell.subway {
+                background-color: #ce93d8;
+            }
+            .grid-cell.bus {
+                background-color: #90caf9;
+            }
+            .grid-cell.obstacle {
+                background-color: #9e9e9e;
+                cursor: not-allowed;
+            }
+            .grid-cell.green {
+                background-color: #a5d6a7;
+            }
+            .grid-cell.yellow {
+                background-color: #fff9c4;
+            }
+            .grid-row {
+                height: 52px;
+            }
+            .player-marker {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 10;
+                pointer-events: none;
+            }
+            .player1 {
+                background-color: #2196f3;
+                box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.5);
+            }
+            .player2 {
+                background-color: #f44336;
+                box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.5);
+            }
+            .direction-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #e0e0e0;
+                margin: 5px;
+                cursor: pointer;
+                user-select: none;
+            }
+            .direction-btn:hover {
+                background-color: #ccc;
+            }
+            .direction-container {
+                position: absolute;
+                display: none;
+                z-index: 20;
+            }
+            .direction-container.active {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .card {
+                width: 80px;
+                height: 120px;
+                border-radius: 8px;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                margin: 0 5px 10px 5px;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                transition: transform 0.2s;
+            }
+            .card:hover:not(.disabled) {
+                transform: scale(1.05);
+            }
+            .card.selected {
+                outline: 3px solid #ffeb3b;
+                outline-offset: 2px;
+            }
+            .card.disabled {
+                opacity: 0.7;
+                cursor: default;
+            }
+            .card-bike {
+                background-color: #4caf50;
+            }
+            .card-subway {
+                background-color: #9c27b0;
+            }
+            .card-ev {
+                background-color: #ffc107;
+                color: #333;
+            }
+            .card-bus {
+                background-color: #2196f3;
+            }
+            .popup-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 100;
+                display: none;
+            }
+            .popup-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                min-width: 300px;
+                max-width: 600px;
+                text-align: center;
+            }
+            .settings-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 300px;
+                height: 100%;
+                background-color: white;
+                box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+                padding: 20px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                z-index: 90;
+                overflow-y: auto;
+            }
+            .settings-panel.active {
+                transform: translateX(0);
+            }
+            .tool-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 5px;
+                cursor: pointer;
+                border: 1px solid #ccc;
+            }
+            .tool-btn.active {
+                background-color: #e3f2fd;
+                border-color: #2196f3;
+            }
+            .current-player-indicator {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 5px;
+            }
+            .range-highlight {
+                background-color: rgba(255, 235, 59, 0.3);
+            }
+            .range-highlight:hover:not(.obstacle) {
+                background-color: rgba(255, 235, 59, 0.5);
+            }
+            .state-indicator {
+                display: inline-block;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-size: 0.8em;
+                background-color: #e0e0e0;
+                color: #333;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 min-h-screen">
+    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden relative">
+        <!-- 游戏标题和信息区 -->
+        <div class="bg-green-600 text-white p-4 flex flex-wrap justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center">
+                <i class="fa fa-leaf mr-2"></i>绿色出行 - 修复版
+            </h1>
+            <div class="mt-2 md:mt-0 flex flex-wrap gap-4 items-center">
+                <div id="game-status" class="flex items-center">
+                    <span class="current-player-indicator bg-blue-400" id="player1-indicator"></span>
+                    <span>请选择起始位置（玩家1先行）</span>
+                    <span class="state-indicator" id="state-indicator">选择起始点</span>
+                </div>
+                <div>回合：<span id="current-round">1</span>/5</div>
+                <div>轮次：<span id="current-turn">1</span>/2</div>
+                <button id="settings-btn" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded flex items-center">
+                    <i class="fa fa-cog mr-1"></i> 设置
+                </button>
+            </div>
+        </div>
+
+        <!-- 主游戏区 -->
+        <div class="p-4 flex flex-col lg:flex-row gap-4">
+            <!-- 左侧玩家信息 -->
+            <div class="w-full lg:w-64 flex-shrink-0">
+                <div class="bg-gray-50 p-3 rounded-lg shadow mb-4">
+                    <h3 class="font-bold text-lg mb-2 flex items-center">
+                        <span class="current-player-indicator bg-blue-400 mr-2"></span>玩家1（蓝）
+                    </h3>
+                    <div class="mb-2">分数：<span id="player1-score" class="font-bold">0</span></div>
+                    <div class="text-sm text-gray-600 mb-2">已完成区域：<span id="player1-districts">0</span></div>
+                    <div class="text-sm text-gray-600">已访问景点：<span id="player1-spots">0</span></div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-lg shadow mb-4">
+                    <h3 class="font-bold text-lg mb-2 flex items-center">
+                        <span class="current-player-indicator bg-red-400 mr-2" id="player2-indicator"></span>玩家2（红）
+                    </h3>
+                    <div class="mb-2">分数：<span id="player2-score" class="font-bold">0</span></div>
+                    <div class="text-sm text-gray-600 mb-2">已完成区域：<span id="player2-districts">0</span></div>
+                    <div class="text-sm text-gray-600">已访问景点：<span id="player2-spots">0</span></div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-lg shadow">
+                    <h3 class="font-bold text-lg mb-2">游戏规则</h3>
+                    <ul class="text-sm space-y-1">
+                        <li>• 点击卡牌选择要使用的交通方式</li>
+                        <li>• 选择后点击高亮格子移动</li>
+                        <li>• 自行车：移动1格，+5分</li>
+                        <li>• 地铁：移动2格，+1分</li>
+                        <li>• 电动汽车：移动1格，-1分</li>
+                        <li>• 公交车：移动1格，+3分</li>
+                        <li>• 到达景点可获得卡牌</li>
+                        <li>• 完成区域可获额外分数</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 中间方格地图 -->
+            <div class="flex-grow flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg">
+                <div id="grid-container" class="relative border-2 border-gray-300 p-2 bg-white rounded-lg">
+                    <!-- 方格地图将通过JS生成 -->
+                </div>
+                
+                <!-- 方向选择器 -->
+                <div id="direction-selector" class="direction-container">
+                    <div></div>
+                    <div class="direction-btn" data-dir="up">↑</div>
+                    <div></div>
+                    <div class="direction-btn" data-dir="left">←</div>
+                    <div></div>
+                    <div class="direction-btn" data-dir="right">→</div>
+                    <div></div>
+                    <div class="direction-btn" data-dir="down">↓</div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 手牌和控制区 -->
+        <div class="bg-gray-50 p-4 border-t">
+            <div class="flex flex-col md:flex-row gap-4">
+                <!-- 玩家1手牌 -->
+                <div class="flex-1">
+                    <h3 class="font-bold mb-2">玩家1手牌</h3>
+                    <div id="player1-cards" class="flex flex-wrap">
+                        <!-- 卡牌将通过JS生成 -->
+                    </div>
+                </div>
+
+                <!-- 玩家2手牌 -->
+                <div class="flex-1">
+                    <h3 class="font-bold mb-2">玩家2手牌</h3>
+                    <div id="player2-cards" class="flex flex-wrap">
+                        <!-- 卡牌将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 flex gap-2">
+                <button id="end-turn-btn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:bg-gray-400" disabled>
+                    结束回合
+                </button>
+                <button id="restart-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    重新开始
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <h2 class="text-xl font-bold mb-4 flex justify-between">
+            <span>地图设置</span>
+            <button id="close-settings" class="text-gray-500 hover:text-gray-700">
+                <i class="fa fa-times"></i>
+            </button>
+        </h2>
+        
+        <div class="mb-4">
+            <h3 class="font-bold mb-2">地图尺寸</h3>
+            <div class="flex gap-2">
+                <input type="number" id="grid-width" value="10" min="5" max="20" class="w-20 border rounded p-1">
+                <span>×</span>
+                <input type="number" id="grid-height" value="8" min="5" max="15" class="w-20 border rounded p-1">
+                <button id="resize-grid" class="bg-blue-600 text-white px-2 py-1 rounded text-sm">应用尺寸</button>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="font-bold mb-2">编辑工具</h3>
+            <div class="flex flex-wrap">
+                <div class="tool-btn active" data-tool="normal" title="普通格子">
+                    <i class="fa fa-square-o"></i>
+                </div>
+                <div class="tool-btn" data-tool="start1" title="玩家1起始点">
+                    <i class="fa fa-flag text-blue-500"></i>
+                </div>
+                <div class="tool-btn" data-tool="start2" title="玩家2起始点">
+                    <i class="fa fa-flag text-red-500"></i>
+                </div>
+                <div class="tool-btn" data-tool="scenic" title="景点">
+                    <i class="fa fa-tree"></i>
+                </div>
+                <div class="tool-btn" data-tool="subway" title="地铁站">
+                    <i class="fa fa-subway"></i>
+                </div>
+                <div class="tool-btn" data-tool="bus" title="公交站">
+                    <i class="fa fa-bus"></i>
+                </div>
+                <div class="tool-btn" data-tool="obstacle" title="障碍物">
+                    <i class="fa fa-ban"></i>
+                </div>
+                <div class="tool-btn" data-tool="green" title="绿色区域">
+                    <i class="fa fa-area-chart text-green-500"></i>
+                </div>
+                <div class="tool-btn" data-tool="yellow" title="黄色区域">
+                    <i class="fa fa-area-chart text-yellow-500"></i>
+                </div>
+                <div class="tool-btn" data-tool="erase" title="清除">
+                    <i class="fa fa-eraser"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="font-bold mb-2">预设地图</h3>
+            <div class="flex flex-wrap gap-2">
+                <button id="preset-default" class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm">默认地图</button>
+                <button id="preset-city" class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm">城市地图</button>
+                <button id="preset-park" class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm">公园地图</button>
+            </div>
+        </div>
+        
+        <div>
+            <h3 class="font-bold mb-2">游戏设置</h3>
+            <div class="space-y-2">
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="wrap-around" class="mr-2">
+                        <span>地图边缘可环绕</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="show-grid-lines" class="mr-2" checked>
+                        <span>显示网格线</span>
+                    </label>
+                </div>
+                <div>
+                    <label>回合数：</label>
+                    <select id="round-count" class="border rounded p-1">
+                        <option value="3">3回合</option>
+                        <option value="5" selected>5回合</option>
+                        <option value="7">7回合</option>
+                        <option value="10">10回合</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <button id="apply-settings" class="mt-6 bg-green-600 text-white w-full py-2 rounded hover:bg-green-700">
+            应用设置并开始游戏
+        </button>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="popup-overlay" id="game-popup">
+        <div class="popup-content">
+            <h3 id="popup-title" class="text-xl font-bold mb-2"></h3>
+            <div id="popup-message" class="mb-4"></div>
+            <button id="popup-confirm" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                确定
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏常量定义
+        const CARD_TYPES = {
+            bike: { name: "自行车", score: 5, moveRange: 1, desc: "移动1格，+5分" },
+            subway: { name: "地铁", score: 1, moveRange: 2, desc: "移动2格，+1分" },
+            ev: { name: "电动汽车", score: -1, moveRange: 1, desc: "移动1格，-1分，可再出一张卡" },
+            bus: { name: "公交车", score: 3, moveRange: 1, desc: "移动1格，+3分，抽1张卡" }
+        };
+
+        // 状态机定义
+        const GameState = {
+            SELECT_START: 'selectStart',
+            PLAYING: 'playing',
+            SELECT_CARD: 'selectCard',
+            OVERLAP: 'overlap',
+            GAME_OVER: 'gameOver'
+        };
+
+        // 游戏主类
+        class GreenTravelGame {
+            constructor() {
+                // 初始化DOM引用
+                this.initDOMReferences();
+                
+                // 初始化游戏数据
+                this.initGameData();
+                
+                // 初始化状态机
+                this.initStateMachine();
+                
+                // 绑定事件监听
+                this.bindEvents();
+                
+                // 启动游戏
+                this.start();
+            }
+            
+            // 初始化DOM引用
+            initDOMReferences() {
+                // 游戏容器和状态显示
+                this.gridContainer = document.getElementById("grid-container");
+                this.gameStatusEl = document.getElementById("game-status");
+                this.stateIndicator = document.getElementById("state-indicator");
+                this.currentRoundEl = document.getElementById("current-round");
+                this.currentTurnEl = document.getElementById("current-turn");
+                
+                // 玩家信息显示
+                this.player1ScoreEl = document.getElementById("player1-score");
+                this.player2ScoreEl = document.getElementById("player2-score");
+                this.player1DistrictsEl = document.getElementById("player1-districts");
+                this.player2DistrictsEl = document.getElementById("player2-districts");
+                this.player1SpotsEl = document.getElementById("player1-spots");
+                this.player2SpotsEl = document.getElementById("player2-spots");
+                this.player1Indicator = document.getElementById("player1-indicator");
+                this.player2Indicator = document.getElementById("player2-indicator");
+                
+                // 手牌容器
+                this.player1CardsEl = document.getElementById("player1-cards");
+                this.player2CardsEl = document.getElementById("player2-cards");
+                
+                // 按钮
+                this.endTurnBtn = document.getElementById("end-turn-btn");
+                this.restartBtn = document.getElementById("restart-btn");
+                this.settingsBtn = document.getElementById("settings-btn");
+                this.closeSettingsBtn = document.getElementById("close-settings");
+                this.settingsPanel = document.getElementById("settings-panel");
+                this.applySettingsBtn = document.getElementById("apply-settings");
+                this.resizeGridBtn = document.getElementById("resize-grid");
+                this.presetButtons = {
+                    default: document.getElementById("preset-default"),
+                    city: document.getElementById("preset-city"),
+                    park: document.getElementById("preset-park")
+                };
+                
+                // 设置面板输入
+                this.gridWidthInput = document.getElementById("grid-width");
+                this.gridHeightInput = document.getElementById("grid-height");
+                this.wrapAroundInput = document.getElementById("wrap-around");
+                this.showGridLinesInput = document.getElementById("show-grid-lines");
+                this.roundCountInput = document.getElementById("round-count");
+                this.toolButtons = document.querySelectorAll(".tool-btn");
+                
+                // 方向选择器和弹窗
+                this.directionSelector = document.getElementById("direction-selector");
+                this.gamePopup = document.getElementById("game-popup");
+                this.popupTitle = document.getElementById("popup-title");
+                this.popupMessage = document.getElementById("popup-message");
+                this.popupConfirm = document.getElementById("popup-confirm");
+                
+                // 玩家标记将在游戏开始时创建
+                this.playerMarkers = {};
+            }
+            
+            // 初始化游戏数据
+            initGameData() {
+                // 地图设置
+                this.gridWidth = 10;
+                this.gridHeight = 8;
+                this.gridData = [];
+                
+                // 游戏设置
+                this.gameSettings = {
+                    wrapAround: false,
+                    showGridLines: true,
+                    totalRounds: 5
+                };
+                
+                // 玩家数据
+                this.players = [
+                    {
+                        id: 1,
+                        hand: [],
+                        score: 0,
+                        position: null,
+                        visitedSpots: {},
+                        completedDistricts: [],
+                        isCurrentPlayer: true,
+                        selectedCardIndex: -1
+                    },
+                    {
+                        id: 2,
+                        hand: [],
+                        score: 0,
+                        position: null,
+                        visitedSpots: {},
+                        completedDistricts: [],
+                        isCurrentPlayer: false,
+                        selectedCardIndex: -1
+                    }
+                ];
+                
+                // 游戏状态
+                this.currentState = GameState.SELECT_START;
+                this.currentRound = 1;
+                this.currentTurn = 1;
+                this.currentPlayerIndex = 0;
+                this.cardPool = [];
+                this.moveRange = [];
+                this.selectedTool = "normal";
+                this.selectedCardType = null;
+                this.popupCallback = null;
+                
+                // 确保玩家2指示器显示
+                this.player2Indicator.style.display = "inline-block";
+            }
+            
+            // 初始化状态机
+            initStateMachine() {
+                this.stateMachine = {
+                    [GameState.SELECT_START]: {
+                        enter: () => this.onEnterSelectStart(),
+                        exit: () => this.onExitSelectStart(),
+                        handleCellClick: (x, y) => this.handleSelectStartCellClick(x, y),
+                        handleEndTurn: () => this.showPopup("无法操作", "请先选择起始位置")
+                    },
+                    [GameState.PLAYING]: {
+                        enter: () => this.onEnterPlaying(),
+                        exit: () => this.onExitPlaying(),
+                        handleCardClick: (playerId, index) => this.handlePlayingCardClick(playerId, index),
+                        handleCellClick: (x, y) => this.handlePlayingCellClick(x, y),
+                        handleEndTurn: () => this.endCurrentPlayerTurn()
+                    },
+                    [GameState.SELECT_CARD]: {
+                        enter: () => this.onEnterSelectCard(),
+                        exit: () => this.onExitSelectCard(),
+                        handlePopupConfirm: () => this.onSelectCardConfirm()
+                    },
+                    [GameState.OVERLAP]: {
+                        enter: () => this.onEnterOverlap(),
+                        exit: () => this.onExitOverlap(),
+                        handlePopupConfirm: () => this.onOverlapConfirm()
+                    },
+                    [GameState.GAME_OVER]: {
+                        enter: () => this.onEnterGameOver(),
+                        exit: () => this.onExitGameOver()
+                    }
+                };
+            }
+            
+            // 绑定事件监听
+            bindEvents() {
+                // 游戏控制按钮
+                this.endTurnBtn.addEventListener("click", () => this.handleStateEvent("handleEndTurn"));
+                this.restartBtn.addEventListener("click", () => this.start());
+                
+                // 设置面板
+                this.settingsBtn.addEventListener("click", () => this.settingsPanel.classList.add("active"));
+                this.closeSettingsBtn.addEventListener("click", () => this.settingsPanel.classList.remove("active"));
+                this.applySettingsBtn.addEventListener("click", () => this.applySettings());
+                this.resizeGridBtn.addEventListener("click", () => this.resizeGrid());
+                
+                // 预设地图
+                this.presetButtons.default.addEventListener("click", () => this.loadPresetMap("default"));
+                this.presetButtons.city.addEventListener("click", () => this.loadPresetMap("city"));
+                this.presetButtons.park.addEventListener("click", () => this.loadPresetMap("park"));
+                
+                // 工具按钮
+                this.toolButtons.forEach(btn => {
+                    btn.addEventListener("click", () => this.selectTool(btn.dataset.tool));
+                });
+                
+                // 弹窗确认
+                this.popupConfirm.addEventListener("click", () => {
+                    this.gamePopup.style.display = "none";
+                    if (typeof this.popupCallback === 'function') {
+                        this.handleStateEvent("handlePopupConfirm");
+                        this.popupCallback = null;
+                    }
+                });
+                
+                // 方向按钮
+                document.querySelectorAll(".direction-btn").forEach(btn => {
+                    btn.addEventListener("click", () => this.handleDirectionClick(btn.dataset.dir));
+                });
+            }
+            
+            // 启动游戏
+            start() {
+                // 重置游戏数据
+                this.initGameData();
+                
+                // 生成玩家标记（每次重新开始都创建新的标记）
+                this.createPlayerMarkers();
+                
+                // 生成地图
+                this.generateGrid(this.gridWidth, this.gridHeight, "default");
+                
+                // 初始化牌池
+                this.initCardPool();
+                
+                // 进入初始状态
+                this.changeState(GameState.SELECT_START);
+                
+                // 更新UI
+                this.updatePlayerScores();
+                this.updatePlayerStats();
+                this.updateRoundTurnDisplay();
+            }
+            
+            // 创建玩家标记
+            createPlayerMarkers() {
+                // 移除旧标记
+                Object.values(this.playerMarkers).forEach(marker => {
+                    if (marker && marker.parentNode) {
+                        marker.parentNode.removeChild(marker);
+                    }
+                });
+                
+                // 创建新标记
+                this.players.forEach(player => {
+                    const marker = document.createElement("div");
+                    marker.className = `player-marker player${player.id}`;
+                    marker.style.display = "none";
+                    this.gridContainer.appendChild(marker);
+                    this.playerMarkers[player.id] = marker;
+                });
+            }
+            
+            // 改变游戏状态
+            changeState(newState) {
+                if (this.currentState === newState) return;
+                
+                // 退出当前状态
+                if (this.stateMachine[this.currentState]?.exit) {
+                    this.stateMachine[this.currentState].exit();
+                }
+                
+                // 更新状态
+                this.currentState = newState;
+                this.stateIndicator.textContent = this.getStateDisplayName(newState);
+                
+                // 进入新状态
+                if (this.stateMachine[newState]?.enter) {
+                    this.stateMachine[newState].enter();
+                }
+            }
+            
+            // 获取状态显示名称
+            getStateDisplayName(state) {
+                const names = {
+                    [GameState.SELECT_START]: "选择起始点",
+                    [GameState.PLAYING]: "游戏中",
+                    [GameState.SELECT_CARD]: "选择卡牌",
+                    [GameState.OVERLAP]: "玩家重叠",
+                    [GameState.GAME_OVER]: "游戏结束"
+                };
+                return names[state] || state;
+            }
+            
+            // 处理状态事件
+            handleStateEvent(eventName, ...args) {
+                if (this.stateMachine[this.currentState]?.[eventName]) {
+                    this.stateMachine[this.currentState][eventName](...args);
+                }
+            }
+            
+            // 生成网格
+            generateGrid(width, height, preset) {
+                this.gridWidth = width;
+                this.gridHeight = height;
+                this.gridData = [];
+                
+                // 清空网格容器
+                this.gridContainer.innerHTML = "";
+                
+                // 重新添加玩家标记
+                this.createPlayerMarkers();
+                
+                // 创建网格数据
+                for (let y = 0; y < this.gridHeight; y++) {
+                    this.gridData[y] = [];
+                    
+                    // 创建行元素
+                    const row = document.createElement("div");
+                    row.className = "grid-row";
+                    row.dataset.y = y;
+                    this.gridContainer.appendChild(row);
+                    
+                    for (let x = 0; x < this.gridWidth; x++) {
+                        // 初始化单元格数据
+                        let cellData = {
+                            type: "normal",
+                            district: null,
+                            spotId: null,
+                            cards: []
+                        };
+                        
+                        // 应用预设
+                        if (preset === "city") {
+                            this.applyCityPreset(cellData, x, y);
+                        } else if (preset === "park") {
+                            this.applyParkPreset(cellData, x, y);
+                        } else {
+                            this.applyDefaultPreset(cellData, x, y);
+                        }
+                        
+                        this.gridData[y][x] = cellData;
+                        
+                        // 创建单元格元素
+                        const cell = document.createElement("div");
+                        cell.className = "grid-cell";
+                        cell.dataset.x = x;
+                        cell.dataset.y = y;
+                        
+                        // 设置单元格样式
+                        this.updateCellVisual(cell, cellData);
+                        
+                        // 添加点击事件
+                        cell.addEventListener("click", () => this.handleCellClick(x, y));
+                        
+                        row.appendChild(cell);
+                    }
+                }
+                
+                // 应用网格线设置
+                this.updateGridLines();
+            }
+            
+            // 应用默认预设
+            applyDefaultPreset(cellData, x, y) {
+                if (y === Math.floor(this.gridHeight / 2) && x === 1) {
+                    cellData.type = "start1";
+                } else if (y === Math.floor(this.gridHeight / 2) && x === this.gridWidth - 2) {
+                    cellData.type = "start2";
+                } else if ((x + y) % 6 === 0) {
+                    cellData.type = "scenic";
+                    cellData.spotId = `s${x}${y}`;
+                    cellData.cards = this.getRandomCards(2);
+                } else if (x % 4 === 0) {
+                    cellData.type = "subway";
+                } else if (y % 3 === 0) {
+                    cellData.type = "bus";
+                } else if (x < this.gridWidth / 2) {
+                    cellData.district = "green";
+                } else {
+                    cellData.district = "yellow";
+                }
+            }
+            
+            // 应用城市预设
+            applyCityPreset(cellData, x, y) {
+                if (y === 0 && x === 0) {
+                    cellData.type = "start1";
+                } else if (y === 0 && x === this.gridWidth - 1) {
+                    cellData.type = "start2";
+                } else if (x % 4 === 0 && y % 3 === 0) {
+                    cellData.type = "scenic";
+                    cellData.spotId = `s${x}${y}`;
+                    cellData.cards = this.getRandomCards(2);
+                } else if (x % 3 === 0) {
+                    cellData.type = "subway";
+                } else if (y % 3 === 0) {
+                    cellData.type = "bus";
+                } else if (x < this.gridWidth / 2) {
+                    cellData.district = "green";
+                } else {
+                    cellData.district = "yellow";
+                }
+            }
+            
+            // 应用公园预设
+            applyParkPreset(cellData, x, y) {
+                if (y === this.gridHeight - 1 && x === 1) {
+                    cellData.type = "start1";
+                } else if (y === this.gridHeight - 1 && x === this.gridWidth - 2) {
+                    cellData.type = "start2";
+                } else if ((x + y) % 5 === 0) {
+                    cellData.type = "scenic";
+                    cellData.spotId = `s${x}${y}`;
+                    cellData.cards = this.getRandomCards(2);
+                } else if (x % 5 === 0) {
+                    cellData.type = "subway";
+                } else if (y % 4 === 0) {
+                    cellData.type = "bus";
+                } else if (y < this.gridHeight / 2) {
+                    cellData.district = "green";
+                } else {
+                    cellData.district = "yellow";
+                }
+            }
+            
+            // 更新单元格视觉样式
+            updateCellVisual(cell, data) {
+                // 清除所有类型类
+                cell.classList.remove(
+                    "start1", "start2", "scenic", "subway", "bus", 
+                    "obstacle", "green", "yellow"
+                );
+                
+                // 应用类型类
+                if (data.type === "start1" || data.type === "start2") {
+                    cell.classList.add(data.type);
+                    cell.innerHTML = `<i class="fa fa-flag ${data.type === 'start1' ? 'text-blue-500' : 'text-red-500'} absolute top-1 left-1"></i>`;
+                } else if (data.type === "scenic") {
+                    cell.classList.add("scenic");
+                    cell.innerHTML = '<i class="fa fa-tree text-green-800 absolute top-1 left-1"></i>';
+                } else if (data.type === "subway") {
+                    cell.classList.add("subway");
+                    cell.innerHTML = '<i class="fa fa-subway text-purple-800 absolute top-1 left-1"></i>';
+                } else if (data.type === "bus") {
+                    cell.classList.add("bus");
+                    cell.innerHTML = '<i class="fa fa-bus text-blue-800 absolute top-1 left-1"></i>';
+                } else if (data.type === "obstacle") {
+                    cell.classList.add("obstacle");
+                    cell.innerHTML = '<i class="fa fa-ban text-gray-600 absolute top-1 left-1"></i>';
+                } else {
+                    cell.innerHTML = "";
+                }
+                
+                // 应用区域颜色
+                if (data.district === "green") {
+                    cell.classList.add("green");
+                } else if (data.district === "yellow") {
+                    cell.classList.add("yellow");
+                }
+            }
+            
+            // 处理单元格点击
+            handleCellClick(x, y) {
+                // 如果在设置模式下，应用编辑工具
+                if (this.settingsPanel.classList.contains("active")) {
+                    this.applyToolToCell(x, y);
+                    return;
+                }
+                
+                // 否则交给状态机处理
+                this.handleStateEvent("handleCellClick", x, y);
+            }
+            
+            // 初始化牌池
+            initCardPool() {
+                this.cardPool = [];
+                // 添加各种类型的卡牌
+                for (let i = 0; i < 10; i++) {
+                    this.cardPool.push("bike");
+                    this.cardPool.push("subway");
+                    this.cardPool.push("ev");
+                    this.cardPool.push("bus");
+                }
+                // 洗牌
+                for (let i = this.cardPool.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.cardPool[i], this.cardPool[j]] = [this.cardPool[j], this.cardPool[i]];
+                }
+            }
+            
+            // 发牌 - 确保玩家二能正常获得卡牌
+            drawCards(playerId, count) {
+                const player = this.players.find(p => p.id === playerId);
+                if (!player) return;
+                
+                // 记录原始手牌数量用于调试
+                const originalCount = player.hand.length;
+                
+                for (let i = 0; i < count; i++) {
+                    if (this.cardPool.length === 0) {
+                        this.showPopup("牌堆为空", "牌堆中已没有卡牌");
+                        break;
+                    }
+                    player.hand.push(this.cardPool.shift());
+                }
+                
+                // 确保卡牌已正确添加
+                if (player.hand.length !== originalCount + count && this.cardPool.length >= count) {
+                    console.warn(`玩家${playerId}发牌异常，应增加${count}张，实际增加${player.hand.length - originalCount}张`);
+                }
+                
+                this.updatePlayerCards(playerId);
+                this.updatePlayerStats();
+            }
+            
+            // 更新玩家手牌
+            updatePlayerCards(playerId) {
+                const player = this.players.find(p => p.id === playerId);
+                const container = playerId === 1 ? this.player1CardsEl : this.player2CardsEl;
+                
+                container.innerHTML = "";
+                
+                player.hand.forEach((cardType, index) => {
+                    const card = document.createElement("div");
+                    card.className = `card card-${cardType} ${player.selectedCardIndex === index ? 'selected' : ''} ${!player.isCurrentPlayer ? 'disabled' : ''}`;
+                    card.textContent = CARD_TYPES[cardType].name;
+                    card.title = CARD_TYPES[cardType].desc;
+                    
+                    // 只有当前玩家可以出牌
+                    if (player.isCurrentPlayer) {
+                        card.addEventListener("click", () => this.handleStateEvent("handleCardClick", playerId, index));
+                    }
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            // 获取随机卡牌
+            getRandomCards(count) {
+                const cardTypes = Object.keys(CARD_TYPES);
+                const result = [];
+                
+                while (result.length < count) {
+                    const randomType = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+                    if (!result.includes(randomType)) {
+                        result.push(randomType);
+                    }
+                }
+                
+                return result;
+            }
+            
+            // 移动玩家标记 - 修复位置计算错误
+            movePlayerMarker(playerId, x, y) {
+                const player = this.players.find(p => p.id === playerId);
+                const marker = this.playerMarkers[playerId];
+                const cell = document.querySelector(`.grid-cell[data-x="${x}"][data-y="${y}"]`);
+                
+                if (player && marker && cell) {
+                    // 确保坐标在有效范围内
+                    const validX = Math.max(0, Math.min(this.gridWidth - 1, x));
+                    const validY = Math.max(0, Math.min(this.gridHeight - 1, y));
+                    
+                    // 获取单元格的位置和尺寸
+                    const cellRect = cell.getBoundingClientRect();
+                    const gridRect = this.gridContainer.getBoundingClientRect();
+                    
+                    // 计算标记位置（确保在单元格中心）
+                    const left = (validX * 52) + 13; // 52是单元格总宽度(50+2边框)，13是居中偏移
+                    const top = (validY * 52) + 13;  // 52是单元格总高度(50+2边框)，13是居中偏移
+                    
+                    // 设置标记位置
+                    marker.style.left = `${left}px`;
+                    marker.style.top = `${top}px`;
+                    marker.style.display = "block";
+                    
+                    // 更新玩家位置
+                    player.position = { x: validX, y: validY };
+                } else {
+                    console.warn(`无法移动玩家${playerId}到位置(${x},${y})，元素不存在`);
+                }
+            }
+            
+            // 切换当前玩家 - 确保玩家二能正常操作
+            switchCurrentPlayer() {
+                // 更新玩家状态
+                this.players.forEach((player, index) => {
+                    player.isCurrentPlayer = index === this.currentPlayerIndex;
+                    player.selectedCardIndex = -1;
+                });
+                
+                // 更新UI指示
+                this.player1Indicator.style.display = this.currentPlayerIndex === 0 ? "inline-block" : "none";
+                this.player2Indicator.style.display = this.currentPlayerIndex === 1 ? "inline-block" : "none";
+                
+                // 更新游戏状态文本
+                this.gameStatusEl.innerHTML = `<span class="current-player-indicator ${this.currentPlayerIndex === 0 ? 'bg-blue-400' : 'bg-red-400'}"></span>玩家${this.currentPlayerIndex + 1}的回合，请选择卡牌<span class="state-indicator" id="state-indicator">${this.getStateDisplayName(this.currentState)}</span>`;
+                
+                // 更新手牌交互状态
+                this.updatePlayerCards(1);
+                this.updatePlayerCards(2);
+                
+                // 确保当前玩家有卡牌
+                const currentPlayer = this.players[this.currentPlayerIndex];
+                if (currentPlayer.hand.length === 0) {
+                    this.drawCards(currentPlayer.id, 2);
+                }
+            }
+            
+            // 结束当前玩家回合
+            endCurrentPlayerTurn() {
+                // 清除选中状态和移动范围
+                this.clearMoveRangeHighlight();
+                this.selectedCardType = null;
+                
+                // 切换到另一个玩家
+                this.currentPlayerIndex = this.currentPlayerIndex === 0 ? 1 : 0;
+                
+                // 如果回到玩家1，说明一轮结束
+                if (this.currentPlayerIndex === 0) {
+                    this.currentTurn++;
+                    
+                    // 如果两轮结束，进入下一回合
+                    if (this.currentTurn > 2) {
+                        this.currentTurn = 1;
+                        this.currentRound++;
+                        
+                        // 给每位玩家补充一张卡牌（确保玩家二也能收到）
+                        this.drawCards(1, 1);
+                        this.drawCards(2, 1);
+                        
+                        // 检查游戏是否结束
+                        if (this.currentRound > this.gameSettings.totalRounds) {
+                            this.changeState(GameState.GAME_OVER);
+                            return;
+                        }
+                        
+                        // 更新回合显示
+                        this.updateRoundTurnDisplay();
+                        this.showPopup("回合结束", `第${this.currentRound - 1}回合结束，进入第${this.currentRound}回合`);
+                    }
+                    
+                    this.updateRoundTurnDisplay();
+                }
+                
+                // 切换当前玩家
+                this.switchCurrentPlayer();
+            }
+            
+            // 计算移动范围
+            calculateMoveRange(x, y, range) {
+                const rangeCells = [];
+                
+                // 四个方向
+                const directions = [
+                    { dx: 0, dy: -1 }, // 上
+                    { dx: 1, dy: 0 },  // 右
+                    { dx: 0, dy: 1 },  // 下
+                    { dx: -1, dy: 0 }  // 左
+                ];
+                
+                // 计算每个方向上的可达单元格
+                directions.forEach(dir => {
+                    for (let step = 1; step <= range; step++) {
+                        let newX = x + dir.dx * step;
+                        let newY = y + dir.dy * step;
+                        
+                        // 处理环绕坐标
+                        let checkX = newX;
+                        let checkY = newY;
+                        
+                        if (this.gameSettings.wrapAround) {
+                            checkX = ((newX % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                            checkY = ((newY % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                        } else if (newX < 0 || newX >= this.gridWidth || newY < 0 || newY >= this.gridHeight) {
+                            break; // 超出范围，停止这个方向的检查
+                        }
+                        
+                        // 检查是否是障碍物
+                        if (this.gridData[checkY][checkX].type === "obstacle") {
+                            break; // 遇到障碍物，停止这个方向的检查
+                        }
+                        
+                        rangeCells.push({ x: newX, y: newY });
+                    }
+                });
+                
+                return rangeCells;
+            }
+            
+            // 检查位置是否有效
+            isValidPosition(x, y) {
+                if (this.gameSettings.wrapAround) {
+                    return true; // 环绕模式下所有位置都有效，后续会调整坐标
+                } else {
+                    // 非环绕模式，检查是否在边界内
+                    return x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight;
+                }
+            }
+            
+            // 高亮显示移动范围
+            highlightMoveRange() {
+                this.moveRange.forEach(pos => {
+                    // 处理环绕模式的坐标
+                    let x = pos.x;
+                    let y = pos.y;
+                    
+                    if (this.gameSettings.wrapAround) {
+                        x = ((x % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                        y = ((y % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                    }
+                    
+                    const cell = document.querySelector(`.grid-cell[data-x="${x}"][data-y="${y}"]`);
+                    if (cell) {
+                        cell.classList.add("range-highlight");
+                    }
+                });
+            }
+            
+            // 清除移动范围高亮
+            clearMoveRangeHighlight() {
+                document.querySelectorAll(".range-highlight").forEach(cell => {
+                    cell.classList.remove("range-highlight");
+                });
+                this.moveRange = [];
+            }
+            
+            // 执行移动
+            executeMove(playerId, x, y) {
+                const player = this.players.find(p => p.id === playerId);
+                if (!player) return;
+                
+                // 获取选中的卡牌
+                const cardIndex = player.selectedCardIndex;
+                const cardType = player.hand[cardIndex];
+                const card = CARD_TYPES[cardType];
+                
+                // 从手牌中移除卡牌
+                player.hand.splice(cardIndex, 1);
+                player.selectedCardIndex = -1;
+                
+                // 清除移动范围高亮
+                this.clearMoveRangeHighlight();
+                
+                // 更新玩家位置（处理环绕模式）
+                let newX = x;
+                let newY = y;
+                
+                if (this.gameSettings.wrapAround) {
+                    newX = ((x % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                    newY = ((y % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                } else {
+                    // 限制在网格范围内
+                    newX = Math.max(0, Math.min(this.gridWidth - 1, x));
+                    newY = Math.max(0, Math.min(this.gridHeight - 1, y));
+                }
+                
+                // 移动玩家标记（确保在网格上）
+                this.movePlayerMarker(playerId, newX, newY);
+                
+                // 添加分数
+                player.score += card.score;
+                this.updatePlayerScores();
+                
+                // 处理特殊卡牌效果
+                setTimeout(() => {
+                    // 公交车效果：额外抽一张卡
+                    if (cardType === "bus") {
+                        this.drawCards(playerId, 1);
+                        this.showPopup("公交车效果", `玩家${playerId}获得1张额外卡牌！`);
+                    }
+                    
+                    // 检查是否到达景点
+                    this.checkScenicSpot(playerId, newX, newY);
+                    
+                    // 检查玩家是否重叠
+                    this.checkPlayerOverlap();
+                    
+                    // 电动汽车效果：可以再出一张卡
+                    if (cardType === "ev") {
+                        this.showPopup("电动汽车效果", `玩家${playerId}可以再出一张地铁或电动汽车卡`, () => {
+                            // 过滤可用卡牌
+                            const validCards = player.hand.filter(card => card === "ev" || card === "subway");
+                            
+                            if (validCards.length > 0) {
+                                this.gameStatusEl.innerHTML = `<span class="current-player-indicator ${playerId === 1 ? 'bg-blue-400' : 'bg-red-400'}"></span>玩家${playerId}使用电动汽车特权，再出一张卡<span class="state-indicator">${this.getStateDisplayName(this.currentState)}</span>`;
+                                this.updatePlayerCards(playerId);
+                            } else {
+                                // 没有可用卡牌，自动结束回合
+                                this.endCurrentPlayerTurn();
+                            }
+                        });
+                    } else {
+                        // 其他卡牌，结束当前玩家回合
+                        this.endCurrentPlayerTurn();
+                    }
+                }, 500);
+            }
+            
+            // 检查是否到达景点
+            checkScenicSpot(playerId, x, y) {
+                const player = this.players.find(p => p.id === playerId);
+                const cellData = this.gridData[y][x];
+                
+                if (cellData.type === "scenic" && cellData.spotId) {
+                    const spotId = cellData.spotId;
+                    
+                    // 检查是否已访问过该景点
+                    if (!player.visitedSpots[spotId]) {
+                        player.visitedSpots[spotId] = true;
+                        
+                        // 景点得分
+                        const spotScore = 5;
+                        player.score += spotScore;
+                        this.updatePlayerScores();
+                        
+                        // 显示景点卡牌选择
+                        this.showScenicCardSelection(playerId, cellData.cards);
+                        
+                        // 检查区域完成情况
+                        this.checkDistrictCompletion(playerId, cellData.district);
+                    }
+                }
+            }
+            
+            // 检查区域完成情况
+            checkDistrictCompletion(playerId, district) {
+                if (!district) return;
+                
+                const player = this.players.find(p => p.id === playerId);
+                if (player.completedDistricts.includes(district)) return;
+                
+                // 计算该区域的景点总数和玩家已访问数量
+                let totalSpots = 0;
+                let visitedSpots = 0;
+                
+                for (let y = 0; y < this.gridHeight; y++) {
+                    for (let x = 0; x < this.gridWidth; x++) {
+                        const cell = this.gridData[y][x];
+                        if (cell.district === district && cell.type === "scenic" && cell.spotId) {
+                            totalSpots++;
+                            if (player.visitedSpots[cell.spotId]) {
+                                visitedSpots++;
+                            }
+                        }
+                    }
+                }
+                
+                // 如果访问了该区域所有景点
+                if (totalSpots > 0 && visitedSpots === totalSpots) {
+                    player.completedDistricts.push(district);
+                    
+                    // 区域完成得分
+                    const districtScore = 15;
+                    player.score += districtScore;
+                    this.updatePlayerScores();
+                    
+                    this.showPopup("区域完成", `玩家${playerId}完成了${district === 'green' ? '绿色' : '黄色'}区域所有景点，获得${districtScore}分！`);
+                }
+                
+                this.updatePlayerStats();
+            }
+            
+            // 检查玩家是否重叠
+            checkPlayerOverlap() {
+                if (!this.players[0].position || !this.players[1].position) return;
+                
+                // 处理环绕模式下的位置比较
+                let p1x = this.players[0].position.x;
+                let p1y = this.players[0].position.y;
+                let p2x = this.players[1].position.x;
+                let p2y = this.players[1].position.y;
+                
+                if (this.gameSettings.wrapAround) {
+                    p1x = ((p1x % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                    p1y = ((p1y % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                    p2x = ((p2x % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                    p2y = ((p2y % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                }
+                
+                // 检查位置是否相同
+                const overlap = p1x === p2x && p1y === p2y;
+                
+                if (overlap) {
+                    this.changeState(GameState.OVERLAP);
+                }
+            }
+            
+            // 显示弹窗
+            showPopup(title, message, callback = null) {
+                this.popupTitle.textContent = title;
+                this.popupMessage.innerHTML = message;
+                this.gamePopup.style.display = "flex";
+                this.popupCallback = callback;
+            }
+            
+            // 显示景点卡牌选择
+            showScenicCardSelection(playerId, cardTypes) {
+                const player = this.players.find(p => p.id === playerId);
+                this.changeState(GameState.SELECT_CARD);
+                
+                // 存储当前玩家ID，用于确认时使用
+                this.selectingPlayerId = playerId;
+                
+                // 过滤玩家手牌中没有的卡牌类型
+                const availableCards = cardTypes.filter(type => !player.hand.includes(type));
+                const cardsToShow = availableCards.length > 0 ? availableCards : cardTypes;
+                
+                let cardsHtml = "<p>选择一张卡牌加入手牌：</p><div style='display: flex; justify-content: center; gap: 10px; margin: 15px 0;'>";
+                
+                cardsToShow.forEach((type, index) => {
+                    cardsHtml += `<div class="card card-${type}" style="cursor: pointer;" data-index="${index}">${CARD_TYPES[type].name}</div>`;
+                });
+                
+                cardsHtml += "</div>";
+                
+                this.showPopup("发现景点", cardsHtml);
+                
+                // 为弹窗中的卡牌添加点击事件
+                setTimeout(() => {
+                    document.querySelectorAll(".popup-content .card").forEach(cardEl => {
+                        cardEl.addEventListener("click", () => {
+                            const index = parseInt(cardEl.dataset.index);
+                            const selectedType = cardsToShow[index];
+                            player.hand.push(selectedType);
+                            this.updatePlayerCards(playerId);
+                            this.gamePopup.style.display = "none";
+                            this.handleStateEvent("handlePopupConfirm");
+                        });
+                    });
+                }, 100);
+            }
+            
+            // 更新玩家分数显示
+            updatePlayerScores() {
+                this.player1ScoreEl.textContent = this.players[0].score;
+                this.player2ScoreEl.textContent = this.players[1].score;
+            }
+            
+            // 更新玩家统计信息
+            updatePlayerStats() {
+                this.player1DistrictsEl.textContent = this.players[0].completedDistricts.length;
+                this.player2DistrictsEl.textContent = this.players[1].completedDistricts.length;
+                this.player1SpotsEl.textContent = Object.keys(this.players[0].visitedSpots).length;
+                this.player2SpotsEl.textContent = Object.keys(this.players[1].visitedSpots).length;
+            }
+            
+            // 更新回合和轮次显示
+            updateRoundTurnDisplay() {
+                this.currentRoundEl.textContent = this.currentRound;
+                this.currentTurnEl.textContent = this.currentTurn;
+            }
+            
+            // 更新网格线显示
+            updateGridLines() {
+                const cells = document.querySelectorAll(".grid-cell");
+                if (this.gameSettings.showGridLines) {
+                    cells.forEach(cell => {
+                        cell.style.border = "1px solid #ccc";
+                    });
+                } else {
+                    cells.forEach(cell => {
+                        cell.style.border = "0";
+                    });
+                }
+            }
+            
+            // 选择编辑工具
+            selectTool(tool) {
+                this.selectedTool = tool;
+                // 移除所有按钮的active类
+                this.toolButtons.forEach(b => b.classList.remove("active"));
+                // 给当前点击的按钮添加active类
+                const activeBtn = Array.from(this.toolButtons).find(b => b.dataset.tool === tool);
+                if (activeBtn) activeBtn.classList.add("active");
+            }
+            
+            // 应用工具到单元格
+            applyToolToCell(x, y) {
+                if (x < 0 || x >= this.gridWidth || y < 0 || y >= this.gridHeight) return;
+                
+                // 清除所有起始点标记（一个玩家只能有一个起始点）
+                if (this.selectedTool === "start1" || this.selectedTool === "start2") {
+                    for (let yy = 0; yy < this.gridHeight; yy++) {
+                        for (let xx = 0; xx < this.gridWidth; xx++) {
+                            if (this.gridData[yy][xx].type === this.selectedTool) {
+                                this.gridData[yy][xx].type = "normal";
+                                const cell = document.querySelector(`.grid-cell[data-x="${xx}"][data-y="${yy}"]`);
+                                if (cell) this.updateCellVisual(cell, this.gridData[yy][xx]);
+                            }
+                        }
+                    }
+                }
+                
+                // 更新单元格数据
+                if (this.selectedTool === "erase") {
+                    this.gridData[y][x] = {
+                        type: "normal",
+                        district: null,
+                        spotId: null,
+                        cards: []
+                    };
+                } else if (this.selectedTool === "green" || this.selectedTool === "yellow") {
+                    this.gridData[y][x].district = this.selectedTool;
+                } else {
+                    this.gridData[y][x].type = this.selectedTool;
+                    
+                    // 如果是景点，添加随机卡牌
+                    if (this.selectedTool === "scenic" && !this.gridData[y][x].spotId) {
+                        this.gridData[y][x].spotId = `s${x}${y}`;
+                        this.gridData[y][x].cards = this.getRandomCards(2);
+                    }
+                }
+                
+                // 更新视觉效果
+                const cell = document.querySelector(`.grid-cell[data-x="${x}"][data-y="${y}"]`);
+                if (cell) this.updateCellVisual(cell, this.gridData[y][x]);
+            }
+            
+            // 调整网格大小
+            resizeGrid() {
+                const width = parseInt(this.gridWidthInput.value) || 10;
+                const height = parseInt(this.gridHeightInput.value) || 8;
+                this.generateGrid(width, height);
+            }
+            
+            // 加载预设地图
+            loadPresetMap(preset) {
+                const width = parseInt(this.gridWidthInput.value) || 10;
+                const height = parseInt(this.gridHeightInput.value) || 8;
+                this.generateGrid(width, height, preset);
+            }
+            
+            // 应用设置
+            applySettings() {
+                // 保存设置
+                this.gameSettings.wrapAround = this.wrapAroundInput.checked;
+                this.gameSettings.showGridLines = this.showGridLinesInput.checked;
+                this.gameSettings.totalRounds = parseInt(this.roundCountInput.value) || 5;
+                
+                // 隐藏设置面板
+                this.settingsPanel.classList.remove("active");
+                
+                // 重新生成网格
+                this.resizeGrid();
+                
+                // 重新初始化游戏
+                this.start();
+            }
+            
+            // 处理方向点击
+            handleDirectionClick(direction) {
+                const currentPlayer = this.players[this.currentPlayerIndex];
+                
+                if (currentPlayer.isCurrentPlayer && this.selectedCardType && currentPlayer.position) {
+                    let x = currentPlayer.position.x;
+                    let y = currentPlayer.position.y;
+                    const range = CARD_TYPES[this.selectedCardType].moveRange;
+                    
+                    // 根据方向计算新位置
+                    switch(direction) {
+                        case "up":
+                            y -= range;
+                            break;
+                        case "right":
+                            x += range;
+                            break;
+                        case "down":
+                            y += range;
+                            break;
+                        case "left":
+                            x -= range;
+                            break;
+                    }
+                    
+                    // 执行移动
+                    this.executeMove(currentPlayer.id, x, y);
+                }
+            }
+            
+            // 状态进入和退出方法
+            onEnterSelectStart() {
+                this.gameStatusEl.innerHTML = '<span class="current-player-indicator bg-blue-400"></span>请选择起始位置（玩家1先行）<span class="state-indicator">选择起始点</span>';
+                this.endTurnBtn.disabled = true;
+                Object.values(this.playerMarkers).forEach(marker => {
+                    marker.style.display = "none";
+                });
+            }
+            
+            onExitSelectStart() {
+                this.endTurnBtn.disabled = false;
+            }
+            
+            handleSelectStartCellClick(x, y) {
+                const cellData = this.gridData[y][x];
+                const currentPlayer = this.players[this.currentPlayerIndex];
+                
+                // 检查是否是有效位置（非障碍物）
+                if (cellData.type === "obstacle") {
+                    this.showPopup("无法选择", "不能选择障碍物作为起始位置");
+                    return;
+                }
+                
+                // 记录玩家位置
+                currentPlayer.position = { x, y };
+                
+                // 移动玩家标记（确保在网格上）
+                this.movePlayerMarker(currentPlayer.id, x, y);
+                
+                // 切换玩家
+                if (this.currentPlayerIndex === 0) {
+                    this.gameStatusEl.innerHTML = '<span class="current-player-indicator bg-red-400"></span>请选择起始位置（玩家2）<span class="state-indicator">选择起始点</span>';
+                    this.player1Indicator.style.display = "none";
+                    this.player2Indicator.style.display = "inline-block";
+                    this.currentPlayerIndex = 1;
+                } else {
+                    // 两个玩家都已选择起始位置，开始游戏
+                    this.currentPlayerIndex = 0;
+                    this.switchCurrentPlayer();
+                    
+                    // 发初始卡牌（确保两个玩家都能收到牌）
+                    this.drawCards(1, 3);
+                    this.drawCards(2, 3);
+                    
+                    this.changeState(GameState.PLAYING);
+                }
+            }
+            
+            onEnterPlaying() {
+                this.gameStatusEl.innerHTML = `<span class="current-player-indicator ${this.currentPlayerIndex === 0 ? 'bg-blue-400' : 'bg-red-400'}"></span>玩家${this.currentPlayerIndex + 1}的回合，请选择卡牌<span class="state-indicator">游戏中</span>`;
+                this.updatePlayerCards(1);
+                this.updatePlayerCards(2);
+            }
+            
+            onExitPlaying() {
+                this.clearMoveRangeHighlight();
+            }
+            
+            handlePlayingCardClick(playerId, index) {
+                const player = this.players.find(p => p.id === playerId);
+                if (!player || !player.isCurrentPlayer) return;
+                
+                // 清除之前的选中状态
+                this.clearMoveRangeHighlight();
+                
+                // 更新选中的卡牌索引
+                player.selectedCardIndex = player.selectedCardIndex === index ? -1 : index;
+                
+                // 更新手牌显示
+                this.updatePlayerCards(playerId);
+                
+                if (player.selectedCardIndex === -1) {
+                    // 取消选择
+                    this.selectedCardType = null;
+                    return;
+                }
+                
+                // 获取卡牌信息
+                this.selectedCardType = player.hand[index];
+                const range = CARD_TYPES[this.selectedCardType].moveRange;
+                
+                // 计算可移动范围并高亮
+                if (player.position) {
+                    this.moveRange = this.calculateMoveRange(player.position.x, player.position.y, range);
+                    this.highlightMoveRange();
+                    this.gameStatusEl.innerHTML = `<span class="current-player-indicator ${playerId === 1 ? 'bg-blue-400' : 'bg-red-400'}"></span>玩家${playerId}选择了${CARD_TYPES[this.selectedCardType].name}，请选择移动目标（可移动${range}格）<span class="state-indicator">游戏中</span>`;
+                }
+            }
+            
+            handlePlayingCellClick(x, y) {
+                const currentPlayer = this.players[this.currentPlayerIndex];
+                
+                // 检查是否在可移动范围内
+                const inRange = this.moveRange.some(pos => {
+                    let checkX = pos.x;
+                    let checkY = pos.y;
+                    
+                    if (this.gameSettings.wrapAround) {
+                        checkX = ((pos.x % this.gridWidth) + this.gridWidth) % this.gridWidth;
+                        checkY = ((pos.y % this.gridHeight) + this.gridHeight) % this.gridHeight;
+                    }
+                    
+                    return checkX === x && checkY === y;
+                });
+                
+                if (inRange && currentPlayer.selectedCardIndex !== -1) {
+                    // 执行移动
+                    this.executeMove(currentPlayer.id, x, y);
+                }
+            }
+            
+            onEnterSelectCard() {
+                this.stateIndicator.textContent = "选择卡牌";
+            }
+            
+            onExitSelectCard() {
+                this.selectingPlayerId = null;
+            }
+            
+            onSelectCardConfirm() {
+                this.changeState(GameState.PLAYING);
+            }
+            
+            onEnterOverlap() {
+                const p1 = this.players[0];
+                const p2 = this.players[1];
+                
+                let message = "";
+                
+                if (p1.hand.length > p2.hand.length && p2.hand.length > 0) {
+                    // 玩家1手牌更多，从玩家2抽一张
+                    const card = p2.hand.shift();
+                    p1.hand.push(card);
+                    message = `玩家1从玩家2抽取了一张【${CARD_TYPES[card].name}】`;
+                } else if (p2.hand.length > p1.hand.length && p1.hand.length > 0) {
+                    // 玩家2手牌更多，从玩家1抽一张
+                    const card = p1.hand.shift();
+                    p2.hand.push(card);
+                    message = `玩家2从玩家1抽取了一张【${CARD_TYPES[card].name}】`;
+                } else {
+                    message = "玩家位置重叠，但双方手牌数量相同或为空，无抽牌操作";
+                }
+                
+                // 更新手牌显示
+                this.updatePlayerCards(1);
+                this.updatePlayerCards(2);
+                
+                this.showPopup("玩家重叠", message);
+            }
+            
+            onExitOverlap() {
+                // 什么也不做，等待确认
+            }
+            
+            onOverlapConfirm() {
+                this.changeState(GameState.PLAYING);
+            }
+            
+            onEnterGameOver() {
+                const p1Score = this.players[0].score;
+                const p2Score = this.players[1].score;
+                
+                let result = "";
+                if (p1Score > p2Score) {
+                    result = `玩家1获胜！`;
+                } else if (p2Score > p1Score) {
+                    result = `玩家2获胜！`;
+                } else {
+                    result = `平局！`;
+                }
+                
+                this.showPopup("游戏结束", `
+                    <p>最终得分：</p>
+                    <p>玩家1: ${p1Score}分</p>
+                    <p>玩家2: ${p2Score}分</p>
+                    <p style="font-weight: bold; margin-top: 15px;">${result}</p>
+                `);
+                
+                this.gameStatusEl.innerHTML = `游戏结束<span class="state-indicator">游戏结束</span>`;
+                this.endTurnBtn.disabled = true;
+            }
+            
+            onExitGameOver() {
+                // 什么也不做
+            }
+        }
+
+        // 初始化游戏
+        window.addEventListener("load", () => {
+            new GreenTravelGame();
+        });
+    </script>
+</body>
+</html>
+    
