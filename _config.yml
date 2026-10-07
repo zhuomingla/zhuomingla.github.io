@@ -7,8 +7,8 @@ title: Hexo
 subtitle: ''
 description: ''
 keywords:
-author: John Doe
-language: en
+author: 无能狂妄
+language: zh-CN
 timezone: ''
 
 # URL
@@ -104,3 +104,8 @@ deploy:
   type: git
   repo: git@github.com:zhuomingla/zhuomingla.github.io.git
   branch: main
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
