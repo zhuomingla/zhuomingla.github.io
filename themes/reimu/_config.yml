@@ -124,8 +124,8 @@ sidebar:
     show_common: true # whether to show common sidebar, ignored on mobile devices
 
 social:
-  # email: mailto:xxx@gmail.com
-  # github: https://github.com/yourname
+  email: mailto:zhuomingla@gmail.com
+  github: https://github.com/zhuomingla
   # google: https://plus.google.com/yourname
   # twitter: https://twitter.com/yourname
   # bluesky: https://bsky.app/profile/yourname
@@ -138,7 +138,7 @@ social:
   # flickr: https://www.flickr.com/photos/yourname
   # dribbble: https://dribbble.com/yourname
   # behance: https://www.behance.net/yourname
-  # bilibili: https://space.bilibili.com/yourname
+  bilibili: https://space.bilibili.com/336691848
   # weibo: https://weibo.com/yourname
   # zhihu: https://www.zhihu.com/people/yourname
   # reddit: https://www.reddit.com/user/yourname
@@ -262,7 +262,7 @@ dark_mode:
 
 # need https://github.com/D-Sketon/hexo-renderer-markdown-it-plus
 math:
-  enable: false
+  enable: true
   # If you don't want to use it, please set `autoRender` to true to enable browser rendering
   katex:
     enable: true
