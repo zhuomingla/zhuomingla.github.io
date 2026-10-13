@@ -418,14 +418,18 @@ twikoo:
   region:
 
 # https://github.com/gitalk/gitalk/blob/master/readme-cn.md
+#评论
 gitalk:
-  enable: false
-  clientID:
-  clientSecret:
-  repo:
-  owner:
-  admin:
-  md5: false
+  enable: true
+  clientID: "18a3fc72ca2cbdf9fd3c"
+  clientSecret: "7cf54396ba9617bb79a57d3cab6b91b584c93d05"
+  repo: "zhuomingla/blog-comments"        # 评论仓库，格式：用户名/仓库名
+  owner: "zhuomingla"                     # 仓库所有者
+  admin: ["zhuomingla"]                   # 管理员列表（拥有初始化 Issue 权限）
+  md5: true                               # 开启 md5 加密，避免 422 错误（关键！）
+  language: "zh-CN"                       # 界面语言
+  distractionFreeMode: false              # 无干扰模式
+
 
 # https://giscus.app/zh-CN
 giscus:
