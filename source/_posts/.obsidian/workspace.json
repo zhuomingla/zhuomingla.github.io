@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "又是无所事事的周末.md",
+                "file": "笔记1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "又是无所事事的周末"
+              "title": "笔记1"
             }
           }
         ]
@@ -190,7 +190,7 @@
   },
   "active": "4e97dc36b6ad4e14",
   "lastOpenFiles": [
-    "在新设备上写博客.md",
-    "又是无所事事的周末.md"
+    "又是无所事事的周末.md",
+    "在新设备上写博客.md"
   ]
 }
