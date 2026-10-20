@@ -18,6 +18,9 @@ menu:
   - name: friend
     url: /friend
     icon:
+  - name: tracker
+    url: /tracker
+    icon:
 
 # friend links
 friends:

@@ -1,0 +1,18 @@
+settings:
+  default_days: 90 # 默认显示最近 90 天
+  fallback_colors:
+    - "#7aa2f7"
+    - "#9ece6a"
+    - "#e0af68"
+    - "#f7768e"
+    - "#bb9af7"
+    - "#7dcfff"
+
+# 预先定义项目的颜色和目标（如果文章里的标签没在这里定义，会自动分配颜色）
+#projects:
+#  - id: 神经网络
+#    color: "#7aa2f7"
+#    goal: 每天学习 30 分钟
+#  - id: 博客
+#    color: "#9ece6a"
+#    goal: 持续折腾与记录
