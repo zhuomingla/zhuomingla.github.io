@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "暴雨的周末.md",
+                "file": "周末总结.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "暴雨的周末"
+              "title": "周末总结"
             }
           }
         ]
@@ -188,10 +188,12 @@
       "bases:Create new base": false
     }
   },
-  "active": "4e97dc36b6ad4e14",
+  "active": "cd79842b352730ad",
   "lastOpenFiles": [
-    "10-23-26.md",
+    "robot-1.md",
+    "周末总结.md",
     "暴雨的周末.md",
+    "10-23-26.md",
     "10-22-26.md",
     "笔记3.md",
     "笔记2.md",
