@@ -21,6 +21,9 @@ menu:
   - name: tracker
     url: /tracker
     icon:
+  - name: task
+    url: /task
+    icon:
 
 # friend links
 friends:

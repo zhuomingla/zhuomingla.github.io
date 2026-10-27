@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "周末总结.md",
+                "file": "file:/home/miku/myblog/source/task/index.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "周末总结"
+              "title": "index"
             }
           }
         ]
@@ -190,8 +190,9 @@
   },
   "active": "cd79842b352730ad",
   "lastOpenFiles": [
-    "robot-1.md",
+    "10-27-26.md",
     "周末总结.md",
+    "robot-1.md",
     "暴雨的周末.md",
     "10-23-26.md",
     "10-22-26.md",
