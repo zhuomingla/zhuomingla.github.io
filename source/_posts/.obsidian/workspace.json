@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "file:/home/miku/myblog/source/task/index.md",
+                "file": "godot-1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "godot-1"
             }
           }
         ]
@@ -188,8 +188,10 @@
       "bases:Create new base": false
     }
   },
-  "active": "cd79842b352730ad",
+  "active": "4e97dc36b6ad4e14",
   "lastOpenFiles": [
+    "file:/home/miku/myblog/source/task/index.md",
+    "godot-1.md",
     "10-27-26.md",
     "周末总结.md",
     "robot-1.md",
