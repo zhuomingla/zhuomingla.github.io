@@ -13,28 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                "file": "11-7.md",
-=======
-                "file": "万圣节.md",
->>>>>>> Stashed changes
-=======
-                "file": "万圣节.md",
->>>>>>> Stashed changes
+                "file": "11-8.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-              "title": "11-7"
-=======
-              "title": "万圣节"
->>>>>>> Stashed changes
-=======
-              "title": "万圣节"
->>>>>>> Stashed changes
+              "title": "11-8"
             }
           }
         ]
@@ -204,16 +188,11 @@
       "bases:新建数据库": false
     }
   },
-  "active": "4e97dc36b6ad4e14",
+  "active": "cd79842b352730ad",
   "lastOpenFiles": [
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    "未命名.md",
     "11-7.md",
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+    "11-8.md",
+    "未命名.md",
     "机器学习-1.md",
     "万圣节.md",
     "godot-1.md",
