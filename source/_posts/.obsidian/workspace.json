@@ -13,15 +13,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "sokaban-2.md",
+                "file": "11-12.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "sokaban-2"
+              "title": "11-12"
+            }
+          },
+          {
+            "id": "75e66dcb34585a5e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "冠军.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "冠军"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -188,15 +203,17 @@
       "bases:新建数据库": false
     }
   },
-  "active": "cd79842b352730ad",
+  "active": "75e66dcb34585a5e",
   "lastOpenFiles": [
-    "好冷.md",
+    "11-12.md",
     "sokaban-2.md",
+    "好冷.md",
     "11-8.md",
     "11-7.md",
-    "未命名.md",
-    "机器学习-1.md",
     "万圣节.md",
+    "机器学习-1.md",
+    "冠军.md",
+    "未命名.md",
     "godot-1.md",
     "file:/home/miku/myblog/source/task/index.md",
     "10-27-26.md",
