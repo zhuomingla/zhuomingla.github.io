@@ -13,16 +13,11 @@
             "state": {
               "type": "markdown",
               "state": {
-<<<<<<< Updated upstream
                 "file": "11-12.md",
-=======
-                "file": "万圣节.md",
->>>>>>> Stashed changes
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-<<<<<<< Updated upstream
               "title": "11-12"
             }
           },
@@ -32,15 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "冠军.md",
+                "file": "double-瓦片.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "冠军"
-=======
-              "title": "万圣节"
->>>>>>> Stashed changes
+              "title": "double-瓦片"
             }
           }
         ],
@@ -213,7 +205,10 @@
   },
   "active": "75e66dcb34585a5e",
   "lastOpenFiles": [
-<<<<<<< Updated upstream
+    "腹痛.md",
+    "double-瓦片.md",
+    "周一.md",
+    "冠军.md",
     "11-12.md",
     "sokaban-2.md",
     "好冷.md",
@@ -221,12 +216,7 @@
     "11-7.md",
     "万圣节.md",
     "机器学习-1.md",
-    "冠军.md",
     "未命名.md",
-=======
-    "机器学习-1.md",
-    "万圣节.md",
->>>>>>> Stashed changes
     "godot-1.md",
     "file:/home/miku/myblog/source/task/index.md",
     "10-27-26.md",
@@ -240,7 +230,6 @@
     "笔记1.md",
     "计划追踪.md",
     "一个笨蛋想安装arch是不是搞错了什么.md",
-    "又是无所事事的周末.md",
-    "在新设备上写博客.md"
+    "又是无所事事的周末.md"
   ]
 }
